@@ -1,0 +1,31 @@
+{
+  "api": 1,
+  "slug": "shop",
+  "name": "Nexora Shop",
+  "version": "0.0.1",
+  "publisher": "Nexora",
+  "license": "Proprietary (free)",
+  "description": {
+    "en": "Sell your panel's plans: products, orders, wallet, payments and a Telegram bot. This release is the skeleton; the store arrives in the next ones.",
+    "fa": "فروش پلن‌های پنل: محصول، سفارش، کیف پول، پرداخت و ربات تلگرام. این نسخه اسکلت است؛ فروشگاه در نسخه‌های بعد می‌آید.",
+    "ru": "Продажа тарифов панели: товары, заказы, кошелёк, платежи и Telegram-бот. Этот выпуск — каркас; магазин появится в следующих.",
+    "zh": "销售面板的套餐：商品、订单、钱包、支付和 Telegram 机器人。此版本只是骨架，商店功能在后续版本中提供。"
+  },
+  "docs": "https://github.com/Nexora-VPN/shop",
+  "install": {
+    "docker": { "image": "ghcr.io/nexora-vpn/shop", "compose": "deploy/compose.yml" },
+    "binary": {
+      "linux-amd64": "nexora-shop-linux-amd64.tar.gz",
+      "linux-arm64": "nexora-shop-linux-arm64.tar.gz"
+    },
+    "options": [
+      { "key": "port", "type": "port", "default": 8095,
+        "label": { "en": "Port", "fa": "پورت", "ru": "Порт", "zh": "端口" } }
+    ]
+  },
+  "events": ["panel.addon_removed"],
+  "webhook": "/nexora/events",
+  "setup": "/nexora/setup",
+  "health": "/health",
+  "ui": "/"
+}

@@ -1,0 +1,13 @@
+# Nexora Shop's compose stack. The install writes .env beside this file with
+# the answers to the manifest's options (NEXORA_OPT_*), the panel's address
+# and the claim code; `docker compose up -d` starts it.
+services:
+  shop:
+    image: ghcr.io/nexora-vpn/shop:${NEXORA_ADDON_VERSION:-latest}
+    container_name: nexora-shop
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${NEXORA_OPT_PORT:-8095}:${NEXORA_OPT_PORT:-8095}"
+    volumes:
+      - ./data:/data

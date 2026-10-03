@@ -1,0 +1,33 @@
+Nexora Shop — Proprietary Software License
+Copyright (c) 2026 Nexora. All rights reserved.
+
+This software (the "Software"), an addon for the Nexora Panel, and its source
+code are proprietary and confidential. They are licensed, not sold. The
+Software is offered free of charge and needs no licence key.
+
+1. GRANT. Subject to this agreement, you are granted a non-exclusive,
+   non-transferable right to install and run the Software, as published by
+   Nexora, for your own use with your own Nexora Panel.
+
+2. RESTRICTIONS. You may NOT, in whole or in part: distribute, sublicense,
+   sell, rent, lease or publish the Software, or make it available to any third
+   party other than by pointing them to Nexora's own releases; modify,
+   translate, reverse engineer, decompile, or disassemble the Software; or
+   remove or alter any proprietary notices.
+
+3. OWNERSHIP. Nexora retains all right, title, and interest in and to the
+   Software, including all intellectual property rights.
+
+4. NO WARRANTY. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+5. LIMITATION OF LIABILITY. IN NO EVENT SHALL NEXORA BE LIABLE FOR ANY CLAIM,
+   DAMAGES, OR OTHER LIABILITY ARISING FROM OR IN CONNECTION WITH THE SOFTWARE
+   OR ITS USE, INCLUDING ANY SALE OR PAYMENT MADE THROUGH IT.
+
+6. TERMINATION. This license terminates automatically if you breach it. On
+   termination you must stop using and destroy all copies of the Software.
+
+The Nexora addon kit and template it is built on are separate works under the
+Apache License 2.0 (github.com/Nexora-VPN/addon-kit).
