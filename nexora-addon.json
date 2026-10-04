@@ -1,31 +1,210 @@
 {
   "api": 1,
-  "slug": "shop",
-  "name": "Nexora Shop",
-  "version": "0.0.1",
-  "publisher": "Nexora",
-  "license": "Proprietary (free)",
   "description": {
-    "en": "Sell your panel's plans: products, orders, wallet, payments and a Telegram bot. This release is the skeleton; the store arrives in the next ones.",
-    "fa": "فروش پلن‌های پنل: محصول، سفارش، کیف پول، پرداخت و ربات تلگرام. این نسخه اسکلت است؛ فروشگاه در نسخه‌های بعد می‌آید.",
-    "ru": "Продажа тарифов панели: товары, заказы, кошелёк, платежи и Telegram-бот. Этот выпуск — каркас; магазин появится в следующих.",
-    "zh": "销售面板的套餐：商品、订单、钱包、支付和 Telegram 机器人。此版本只是骨架，商店功能在后续版本中提供。"
+    "en": "Sell your panel's plans: a Telegram bot, a web app and a mini-app; card-to-card receipts, a bank-SMS forwarder and your own gateways; wallets, renewals, discount and gift codes, referrals and agents; reports and an encrypted backup — in Persian, English, Russian and Chinese.",
+    "fa": "فروش پلن‌های پنل: ربات تلگرام، وب‌اپ و مینی‌اپ؛ رسید کارت‌به‌کارت، پیامک بانک و درگاه‌های خودتان؛ کیف پول، تمدید، کد تخفیف و هدیه، دعوت و نماینده؛ گزارش‌ها و پشتیبان رمزشده — به فارسی، انگلیسی، روسی و چینی.",
+    "ru": "Продажа тарифов панели: Telegram-бот, веб- и мини-приложение; чеки с карты на карту, банковские SMS и свои шлюзы; кошелёк, продления, коды, рефералы и агенты; отчёты и шифрованный бэкап — на четырёх языках.",
+    "zh": "销售面板的套餐：Telegram 机器人、网页应用和小程序；卡对卡转账凭证、银行短信转发和您自己的支付网关；钱包、续费、折扣码和礼品码、推荐与代理；报表和加密备份——支持波斯语、英语、俄语和中文。"
   },
   "docs": "https://github.com/Nexora-VPN/shop",
+  "events": [
+    "panel.addon_removed",
+    "user.deleted",
+    "user.bulk",
+    "user.expiring",
+    "user.expired",
+    "user.quota_warning",
+    "user.quota_reached",
+    "user.renewed",
+    "panel.restore_applied"
+  ],
+  "health": "/health",
   "install": {
-    "docker": { "image": "ghcr.io/nexora-vpn/shop", "compose": "deploy/compose.yml" },
     "binary": {
       "linux-amd64": "nexora-shop-linux-amd64.tar.gz",
       "linux-arm64": "nexora-shop-linux-arm64.tar.gz"
     },
+    "docker": {
+      "compose": "deploy/compose.yml",
+      "image": "ghcr.io/nexora-vpn/shop"
+    },
     "options": [
-      { "key": "port", "type": "port", "default": 8095,
-        "label": { "en": "Port", "fa": "پورت", "ru": "Порт", "zh": "端口" } }
+      {
+        "default": 8095,
+        "key": "port",
+        "label": {
+          "en": "Port",
+          "fa": "پورت",
+          "ru": "Порт",
+          "zh": "端口"
+        },
+        "type": "port"
+      },
+      {
+        "help": {
+          "en": "Shop's admin and the panel's calls are served under this path; customers' pages stay at the root and never show it. A random one keeps scanners off the admin. Empty: the root.",
+          "fa": "ادمین فروشگاه و درخواست‌های پنل زیر این مسیرند؛ صفحه‌های مشتری در ریشه می‌مانند و آن را نشان نمی‌دهند. خالی: ریشه.",
+          "ru": "Админка Shop и вызовы панели — под этим путём; страницы клиентов в корне и его не показывают. Пусто — корень.",
+          "zh": "Shop 的管理后台和面板的请求都在此路径下提供；客户页面保留在根路径，永远不会显示它。随机路径可让扫描器找不到管理后台。留空：根路径。"
+        },
+        "key": "base_path",
+        "label": {
+          "en": "Admin path",
+          "fa": "مسیر ادمین",
+          "ru": "Путь админки",
+          "zh": "管理后台路径"
+        },
+        "type": "path"
+      },
+      {
+        "choices": [
+          "sqlite",
+          "postgres"
+        ],
+        "default": "sqlite",
+        "help": {
+          "en": "SQLite keeps everything in Shop's data directory. PostgreSQL is a server you already run.",
+          "fa": "SQLite همه‌چیز را در پوشهٔ دادهٔ فروشگاه نگه می‌دارد. PostgreSQL سروری است که خودتان دارید.",
+          "ru": "SQLite хранит всё в каталоге данных Shop. PostgreSQL — сервер, который у вас уже есть.",
+          "zh": "SQLite 把所有数据保存在 Shop 的数据目录中。PostgreSQL 是您已有的数据库服务器。"
+        },
+        "key": "database",
+        "label": {
+          "en": "Database",
+          "fa": "دیتابیس",
+          "ru": "База данных",
+          "zh": "数据库"
+        },
+        "type": "choice"
+      },
+      {
+        "help": {
+          "en": "host=… user=… password=… dbname=… sslmode=…",
+          "fa": "host=… user=… password=… dbname=… sslmode=…",
+          "ru": "host=… user=… password=… dbname=… sslmode=…",
+          "zh": "host=… user=… password=… dbname=… sslmode=…"
+        },
+        "key": "database_dsn",
+        "label": {
+          "en": "PostgreSQL connection",
+          "fa": "اتصال PostgreSQL",
+          "ru": "Подключение к PostgreSQL",
+          "zh": "PostgreSQL 连接"
+        },
+        "required": true,
+        "type": "secret",
+        "when": {
+          "database": "postgres"
+        }
+      },
+      {
+        "default": "admin",
+        "key": "admin_username",
+        "label": {
+          "en": "Shop admin username",
+          "fa": "نام کاربری ادمین فروشگاه",
+          "ru": "Логин администратора Shop",
+          "zh": "Shop 管理员用户名"
+        },
+        "type": "string"
+      },
+      {
+        "help": {
+          "en": "At least 10 characters. Used once, to make the first admin; change it in Shop afterwards.",
+          "fa": "دست‌کم ۱۰ نویسه. فقط یک بار برای ساختن اولین ادمین به کار می‌رود؛ بعد در خود فروشگاه عوضش کنید.",
+          "ru": "Не короче 10 символов. Используется один раз, для первого администратора; потом смените его в Shop.",
+          "zh": "至少 10 个字符。仅用于创建第一个管理员一次，之后请在 Shop 中修改。"
+        },
+        "key": "admin_password",
+        "label": {
+          "en": "Shop admin password",
+          "fa": "رمز ادمین فروشگاه",
+          "ru": "Пароль администратора Shop",
+          "zh": "Shop 管理员密码"
+        },
+        "required": true,
+        "type": "secret"
+      },
+      {
+        "help": {
+          "en": "Where customers reach Shop, e.g. https://shop.example.com. The mini-app in Telegram needs https. Can be set later in Shop.",
+          "fa": "آدرسی که مشتری‌ها فروشگاه را با آن باز می‌کنند، مثلاً https://shop.example.com. مینی‌اپ تلگرام https لازم دارد. بعداً در خود فروشگاه هم می‌شود تنظیمش کرد.",
+          "ru": "Адрес, по которому клиенты открывают Shop, например https://shop.example.com. Мини-приложению Telegram нужен https. Можно задать позже в Shop.",
+          "zh": "客户访问 Shop 的地址，例如 https://shop.example.com。Telegram 小程序需要 https。也可以稍后在 Shop 中设置。"
+        },
+        "key": "public_url",
+        "label": {
+          "en": "Shop's public address",
+          "fa": "آدرس عمومی فروشگاه",
+          "ru": "Публичный адрес Shop",
+          "zh": "Shop 的公开地址"
+        },
+        "type": "url"
+      },
+      {
+        "choices": [
+          "off",
+          "acme",
+          "self-signed"
+        ],
+        "default": "off",
+        "help": {
+          "en": "acme: Shop gets a free certificate for the public address's domain itself, on port 443 here; the domain must point here and 443 be free. self-signed: a certificate of Shop's own, for an address by IP — browsers warn, Telegram's mini-app does not open. off: no HTTPS, or your own proxy.",
+          "fa": "acme: گواهی رایگان برای دامنهٔ آدرس عمومی، روی ۴۴۳ همین سرور. self-signed: گواهی خود فروشگاه برای آدرس با IP؛ مینی‌اپ تلگرام باز نمی‌شود. off: بدون HTTPS.",
+          "ru": "acme: бесплатный сертификат для домена публичного адреса, на 443. self-signed: свой сертификат для адреса по IP; мини-приложение не откроется. off: без HTTPS.",
+          "zh": "acme：在本机 443 端口为公开地址的域名获取免费证书。self-signed：Shop 自己的证书，用于 IP 地址；Telegram 小程序无法打开。off：不用 HTTPS 或用您自己的代理。"
+        },
+        "key": "https",
+        "label": {
+          "en": "HTTPS certificate",
+          "fa": "گواهی HTTPS",
+          "ru": "Сертификат HTTPS",
+          "zh": "HTTPS 证书"
+        },
+        "type": "choice"
+      },
+      {
+        "help": {
+          "en": "From @BotFather. Optional: the bot can be set later in Shop. Use a bot of its own, not the panel's.",
+          "fa": "از ‎@BotFather. اختیاری است و بعداً در فروشگاه هم می‌شود تنظیمش کرد. یک ربات جدا بسازید، نه ربات پنل.",
+          "ru": "От @BotFather. Необязательно: бота можно задать позже в Shop. Нужен отдельный бот, не бот панели.",
+          "zh": "从 @BotFather 获取。可选：也可以稍后在 Shop 中设置。请使用单独的机器人，不要用面板的机器人。"
+        },
+        "key": "bot_token",
+        "label": {
+          "en": "Telegram bot token",
+          "fa": "توکن ربات تلگرام",
+          "ru": "Токен Telegram-бота",
+          "zh": "Telegram 机器人令牌"
+        },
+        "type": "secret"
+      }
     ]
   },
-  "events": ["panel.addon_removed"],
-  "webhook": "/nexora/events",
+  "license": "proprietary",
+  "name": "Nexora Shop",
+  "publisher": "Nexora",
+  "requires": {
+    "panel": "\u003e=0.0.2"
+  },
+  "scopes": [
+    {
+      "purpose": "to read back the accounts it sold, and their usage",
+      "scope": "users:read"
+    },
+    {
+      "purpose": "to create the accounts customers buy, and renew or top them up",
+      "scope": "users:write"
+    },
+    {
+      "purpose": "to send Shop's own encrypted backup to the backup chat you chose on the panel",
+      "scope": "backup:deliver"
+    }
+  ],
   "setup": "/nexora/setup",
-  "health": "/health",
-  "ui": "/"
+  "signature": "lvGtHthGlONKCL1Sb1BuowFLHxlG0vru5xC/DUF1p67ejDxhlKMNwM0Yb2cpCpZKKwEVV3I53I6WM9mW2rP0AQ==",
+  "slug": "shop",
+  "ui": "/",
+  "version": "0.0.1",
+  "webhook": "/nexora/events"
 }
