@@ -31,20 +31,28 @@ in `data/`.
 - **Update:** run `sh install.sh` again (or **Update on its host** in the
   panel). The answers and the data are kept.
 - **Remove:** `sh install.sh --uninstall`, with `--purge` to delete the data.
+  Removed with its data kept and installed again (a new install, a new claim
+  code), Shop drops the registration it kept, registers anew, sets its
+  admin's password to the new answer, turns its second factor off and signs
+  it out everywhere; an update or a restart keeps both.
 
 | Option | Default | |
 | --- | --- | --- |
-| `port` | `8095` | the port Shop listens on |
+| `port` | `8095` | the port Shop listens on; with HTTPS on, its only port, serving HTTPS and nothing plain (docker publishes it as it is) |
 | `database` | `sqlite` | `sqlite` keeps everything in `data/`; `postgres` uses a server you run |
 | `database_dsn` | | PostgreSQL's connection (asked only for `postgres`) |
 | `admin_username` | `admin` | Shop's own admin account |
-| `admin_password` | | its password, at least 10 characters; used once to make the account — change it in Shop afterwards |
+| `admin_password` | | its password, 10 characters to 72 bytes (about 36 Persian or Russian letters, 24 Chinese) — `install.sh` refuses another; it makes the account, and again on a new install over kept data (which also turns the admin's second factor off and signs it out everywhere) — change it in Shop afterwards |
 | `base_path` | drawn | the path Shop's admin, its API and the panel's calls are under; customers' pages (`/app/`, `/pay/`) stay at the root and never show it. The panel and `install.sh` draw a random one; `base_path=` (empty) puts the admin at the root. An update keeps what the install has |
-| `https` | `off` | `acme`: a certificate for the public address's domain, on 443; `self-signed`: Shop's own, for an address by IP (browsers warn, Telegram's mini-app does not open); `off`: none, or your own proxy |
+| `public_url` | | where customers reach Shop, `https://<host>:<port>`; with HTTPS on it names Shop's `port` (443 when it names none), and `install.sh` refuses another |
+| `https` | `off` (the panel's form: `panel`) | `panel`: a certificate from the panel's own, chosen at the install, which the panel renews and Shop fetches — any port, so Shop shares a server with the panel; `acme`: a certificate for the public address's domain — the port is 443; `acme-http`: the same on any port, the CA asking on port 80; `self-signed`: Shop's own, for an address by IP — the panel shows its fingerprint at the approval and trusts that certificate (browsers warn, Telegram's mini-app does not open); `off`: plain HTTP on the port, for your own proxy. An install from before one port keeps its two ports when updated |
 
 Then open Shop's admin at its address and its base path — `install.sh`
-prints it, the panel opens it from the addon's row — and follow **Set-up**:
-the bot, the public address, a payment method and the first product.
+prints it, the panel opens it from the addon's row. **Set-up** is a
+checklist of Shop's own work, not a wizard: the bot, your admins, the
+group, cards, products, sign-in, the subscription. What the panel's install
+did — the registration, the public address with HTTPS — shows there only
+when something is wrong.
 
 ## Guides
 

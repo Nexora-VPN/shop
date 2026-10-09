@@ -22,26 +22,48 @@ HTTPS, and set it as the public address (`PUT /api/settings/payments`,
 ## Setting it up
 
 The install asks for Shop's **public address**, whether Shop should get its
-**HTTPS certificate** itself (`https: acme`), and the **bot's token** — all
-three optional, all changeable later. Then Shop's admin shows a checklist
-until Shop can sell: the address, checked from outside; the bot, checked
-with Telegram and its menu button set to the mini-app; **your Telegram as
-an admin** — open the link or scan the QR code and press Start; **the
-receipts group** — add the bot to your admins' group and send `/receipts`
-in the topic you want; cards; products picked from the panel's plans.
-Nothing asks for an id.
+**HTTPS certificate** (`https: panel`, the panel's, by default), and the **bot's token**. The
+token can wait and is set in Shop; with HTTPS on, the public address is
+needed at the install and names Shop's port. The address can change later
+in Shop, on the same port; the certificate's mode by running the install
+again with a new answer. Then Shop's admin shows **Set-up**, a
+checklist of Shop's own work — not a wizard, nothing forces it: the bot,
+checked with Telegram and its menu button set to the mini-app; **your
+Telegram as an admin** — open the link or scan the QR code and press Start;
+**the receipts group** — add the bot to your admins' group and send
+`/receipts` in the topic you want; cards; products picked from the panel's
+plans; sign-in; the subscription. What the panel's install did — the
+registration, the public address with HTTPS — is listed only when it is
+wrong. Nothing asks for an id.
+
+With `https: panel`, Shop serves the public address with the certificate
+chosen at the install from the panel's own (*Certificates* on the panel):
+the panel issues and renews it, and Shop fetches it from the panel every few
+minutes and keeps a copy. Shop needs no port 443 of its own, so it shares a
+server with the panel and other addons: give Shop a port of its own there,
+such as 8443, and the public address the same port,
+`https://shop.example.com:8443`.
+
+With HTTPS on, Shop serves it on its install port alone, nothing plain
+beside it, and the public address names that port (443 when it names none):
+`install.sh` refuses one that does not. The panel reaches Shop at that
+address too. An install from before keeps its two ports when updated.
 
 With `https: acme`, the domain of the public address must point at Shop's
-server and port 443 must be free there: Shop answers the certificate
-authority's check on 443 itself (TLS-ALPN-01), so nothing listens on 80,
-and renews the certificate on its own. Shop's own port (8095) stays plain
-HTTP for the panel.
+server, and Shop's port is 443, which must be free there: Shop answers the
+certificate authority's check on it (TLS-ALPN-01), so nothing listens on 80,
+and renews the certificate on its own; `install.sh` refuses acme on another
+port. `https: acme-http` is the same on any port, the authority asking on
+port 80, for a server whose 443 is taken.
 
 With `https: self-signed` — an address by IP, such as
 `https://203.0.113.9:8443`, with no domain a CA would sign — Shop makes a
-certificate of its own and answers on the port the address names. Browsers
-warn once; the traffic is encrypted, and **Set-up** shows the
-certificate's fingerprint to compare with the browser's. Telegram opens no
+certificate of its own and serves it on its port, which the address names.
+Browsers warn once; the traffic is encrypted, and **Set-up** shows the
+certificate's fingerprint to compare with the browser's and with the one
+the panel shows when you approve Shop — approving trusts exactly that
+certificate. Shop renews it about once a year; trust the new one in the
+panel then, under **Certificate** on Shop's row. Telegram opens no
 mini-app on such an address, so the bot offers none: customers use the bot
 and the web app in a browser.
 

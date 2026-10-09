@@ -31,6 +31,12 @@
     "options": [
       {
         "default": 8095,
+        "help": {
+          "en": "Shop listens here. With HTTPS on, this one port serves it and nothing plain: the public address names it (443 for acme).",
+          "fa": "Shop روی این پورت گوش می‌دهد. با HTTPS روشن فقط همین پورت HTTPS می‌دهد و آدرس عمومی همین پورت را دارد (برای acme ۴۴۳).",
+          "ru": "Shop слушает здесь. С HTTPS этот порт отдаёт только его: публичный адрес называет этот порт (443 для acme).",
+          "zh": "Shop 在此端口监听。启用 HTTPS 时只在此端口提供 HTTPS，不提供明文：公开地址需包含此端口（acme 为 443）。"
+        },
         "key": "port",
         "label": {
           "en": "Port",
@@ -110,10 +116,10 @@
       },
       {
         "help": {
-          "en": "At least 10 characters. Used once, to make the first admin; change it in Shop afterwards.",
-          "fa": "دست‌کم ۱۰ نویسه. فقط یک بار برای ساختن اولین ادمین به کار می‌رود؛ بعد در خود فروشگاه عوضش کنید.",
-          "ru": "Не короче 10 символов. Используется один раз, для первого администратора; потом смените его в Shop.",
-          "zh": "至少 10 个字符。仅用于创建第一个管理员一次，之后请在 Shop 中修改。"
+          "en": "At least 10 characters. Makes the first admin, and again on a new install over kept data; change it in Shop afterwards.",
+          "fa": "دست‌کم ۱۰ نویسه. اولین ادمین را می‌سازد، و نصب دوباره روی داده‌ی مانده هم آن را می‌گذارد؛ بعد در خود فروشگاه عوضش کنید.",
+          "ru": "Не короче 10 символов. Создаёт первого администратора и задаётся снова при новой установке поверх данных; потом смените его в Shop.",
+          "zh": "至少 10 个字符。用于创建第一个管理员，在保留数据上重新安装时也会重新设置；之后请在 Shop 中修改。"
         },
         "key": "admin_password",
         "label": {
@@ -123,14 +129,14 @@
           "zh": "Shop 管理员密码"
         },
         "required": true,
-        "type": "secret"
+        "type": "password"
       },
       {
         "help": {
-          "en": "Where customers reach Shop, e.g. https://shop.example.com. The mini-app in Telegram needs https. Can be set later in Shop.",
-          "fa": "آدرسی که مشتری‌ها فروشگاه را با آن باز می‌کنند، مثلاً https://shop.example.com. مینی‌اپ تلگرام https لازم دارد. بعداً در خود فروشگاه هم می‌شود تنظیمش کرد.",
-          "ru": "Адрес, по которому клиенты открывают Shop, например https://shop.example.com. Мини-приложению Telegram нужен https. Можно задать позже в Shop.",
-          "zh": "客户访问 Shop 的地址，例如 https://shop.example.com。Telegram 小程序需要 https。也可以稍后在 Shop 中设置。"
+          "en": "Where customers reach Shop, e.g. https://shop.example.com:8095. With HTTPS on it is needed now and names Shop's port (none means 443). The mini-app in Telegram needs https.",
+          "fa": "آدرسی که مشتری‌ها فروشگاه را با آن باز می‌کنند، مثلاً https://shop.example.com:8095. با HTTPS روشن لازم است و پورت فروشگاه را دارد (بدون پورت ۴۴۳). مینی‌اپ تلگرام https می‌خواهد.",
+          "ru": "Адрес, по которому клиенты открывают Shop, например https://shop.example.com:8095. С HTTPS он нужен сразу и называет порт Shop (без порта — 443). Мини-приложению Telegram нужен https.",
+          "zh": "客户访问 Shop 的地址，例如 https://shop.example.com:8095。启用 HTTPS 时现在就需要，并包含 Shop 的端口（不写即 443）。Telegram 小程序需要 https。"
         },
         "key": "public_url",
         "label": {
@@ -143,16 +149,18 @@
       },
       {
         "choices": [
-          "off",
+          "panel",
           "acme",
-          "self-signed"
+          "acme-http",
+          "self-signed",
+          "off"
         ],
-        "default": "off",
+        "default": "panel",
         "help": {
-          "en": "acme: Shop gets a free certificate for the public address's domain itself, on port 443 here; the domain must point here and 443 be free. self-signed: a certificate of Shop's own, for an address by IP — browsers warn, Telegram's mini-app does not open. off: no HTTPS, or your own proxy.",
-          "fa": "acme: گواهی رایگان برای دامنهٔ آدرس عمومی، روی ۴۴۳ همین سرور. self-signed: گواهی خود فروشگاه برای آدرس با IP؛ مینی‌اپ تلگرام باز نمی‌شود. off: بدون HTTPS.",
-          "ru": "acme: бесплатный сертификат для домена публичного адреса, на 443. self-signed: свой сертификат для адреса по IP; мини-приложение не откроется. off: без HTTPS.",
-          "zh": "acme：在本机 443 端口为公开地址的域名获取免费证书。self-signed：Shop 自己的证书，用于 IP 地址；Telegram 小程序无法打开。off：不用 HTTPS 或用您自己的代理。"
+          "en": "panel: one of the panel's certificates, renewed by the panel, on any port. acme: a free certificate; the port is 443. acme-http: the same on any port, the CA asking on port 80. self-signed: Shop's own; the panel shows it to trust. off: plain HTTP, for a proxy of yours.",
+          "fa": "panel: گواهی پنل، روی هر پورت. acme: گواهی رایگان، پورت ۴۴۳. acme-http: همان روی هر پورت، بررسی روی ۸۰. self-signed: گواهی خودش، پنل برای اعتماد نشانش می‌دهد. off: HTTP ساده، پشت پراکسی.",
+          "ru": "panel: сертификат панели, любой порт. acme: бесплатный, порт 443. acme-http: то же, любой порт, проверка на 80. self-signed: свой, панель покажет его. off: HTTP за вашим прокси.",
+          "zh": "panel：面板证书，任意端口。acme：免费证书，端口 443。acme-http：同上，任意端口，80 端口验证。self-signed：自有证书，面板显示以供信任。off：明文 HTTP，用于您的代理。"
         },
         "key": "https",
         "label": {
@@ -185,7 +193,7 @@
   "name": "Nexora Shop",
   "publisher": "Nexora",
   "requires": {
-    "panel": "\u003e=0.0.2"
+    "panel": "\u003e=0.0.3"
   },
   "scopes": [
     {
@@ -202,9 +210,9 @@
     }
   ],
   "setup": "/nexora/setup",
-  "signature": "lvGtHthGlONKCL1Sb1BuowFLHxlG0vru5xC/DUF1p67ejDxhlKMNwM0Yb2cpCpZKKwEVV3I53I6WM9mW2rP0AQ==",
+  "signature": "XYi1LSld1wkEyTtUb5E5ddYNBwDkr247dqyuazGpII4jtFoXsum36YN8TYH/c5k6cjJxPheyF7MgUi/I2ek5Cg==",
   "slug": "shop",
   "ui": "/",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "webhook": "/nexora/events"
 }
